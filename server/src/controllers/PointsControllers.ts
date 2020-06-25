@@ -69,17 +69,19 @@ class pointsControllers {
         .split(',')
         .map(element => Number(element.trim()))
 
-        const points = await knex('points')
-        .join('point_item', 'points.id', '=', 'point_item.point_id')
-        .whereIn('point_item.item_id', parsedItems)
-        .where('city', String(city))
-        .where('uf', String(uf))
-        .distinct()
-        .select('points.*')
-
-        console.log(city,uf,items)
-
-        response.json(points)
+        if(city == null || uf == null || items == null){
+            const points = await knex('points')
+            response.json(points)
+        }else{
+            const points = await knex('points')
+            .join('point_item', 'points.id', '=', 'point_item.point_id')
+            .whereIn('point_item.item_id', parsedItems)
+            .where('city', String(city))
+            .where('uf', String(uf))
+            .distinct()
+            .select('points.*')
+            response.json(points)
+        }       
     }
 }
 
